@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">播放器</string>
+
+    <string name="hello_world">你好!</string>
+    <string name="action_settings">设置</string>
+
+    <string name="search_music_file">扫描</string>
+</resources>

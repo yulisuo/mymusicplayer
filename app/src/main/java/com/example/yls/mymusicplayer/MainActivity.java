@@ -1,9 +1,12 @@
 package com.example.yls.mymusicplayer;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.yls.mymusicplayer.scan.ScanService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }else if(id == R.id.search_music_file){
+            Intent scanIntent = new Intent(this,ScanService.class);
+            scanIntent.setAction("com.example.yls.mymusicplayer.scan_music_file");
+            startService(scanIntent);
         }
 
         return super.onOptionsItemSelected(item);
