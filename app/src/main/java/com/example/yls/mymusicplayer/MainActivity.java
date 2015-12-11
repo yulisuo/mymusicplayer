@@ -1,19 +1,33 @@
 package com.example.yls.mymusicplayer;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.database.Cursor;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
+import com.example.yls.mymusicplayer.adapter.SongCursorAdapter;
+import com.example.yls.mymusicplayer.listener.InitListListener;
 import com.example.yls.mymusicplayer.scan.ScanService;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements InitListListener,ServiceConnection{
+
+
+    ListView songList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        songList = (ListView) findViewById(R.id.song_list);
+//        startman
     }
 
     @Override
@@ -36,9 +50,26 @@ public class MainActivity extends AppCompatActivity {
         }else if(id == R.id.search_music_file){
             Intent scanIntent = new Intent(this,ScanService.class);
             scanIntent.setAction("com.example.yls.mymusicplayer.scan_music_file");
-            startService(scanIntent);
+            bindService(scanIntent,this, Context.BIND_AUTO_CREATE);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void initSongList(Cursor cursor) {
+        Log.i(ScanService.TAG, "activity:"+cursor);
+        songList.setAdapter(new SongCursorAdapter(this,R.layout.song_item,cursor));
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        ScanService.ScanServiceBinder binder = (ScanService.ScanServiceBinder) service;
+        binder.setActivity(this);
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
     }
 }
