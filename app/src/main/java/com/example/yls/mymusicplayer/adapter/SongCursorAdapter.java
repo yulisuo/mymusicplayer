@@ -29,7 +29,7 @@ public class SongCursorAdapter extends CursorAdapter{
         super(context, c);
     }
 
-    public SongCursorAdapter(Context context, int layout,Cursor c){
+    public  SongCursorAdapter(Context context, int layout,Cursor c){
         super(context, c);
         this.layout = layout;
     }
@@ -44,7 +44,7 @@ public class SongCursorAdapter extends CursorAdapter{
     public void bindView(View view, Context context, Cursor cursor) {
         TextView name = (TextView) view.findViewById(R.id.tv_name);
         TextView duration = (TextView) view.findViewById(R.id.tv_duration);
-        name.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE)));
+        name.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
         duration.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)));
     }
 }

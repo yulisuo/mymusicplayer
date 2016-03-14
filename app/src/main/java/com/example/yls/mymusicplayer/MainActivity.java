@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.example.yls.mymusicplayer.adapter.SongCursorAdapter;
 import com.example.yls.mymusicplayer.listener.InitListListener;
+import com.example.yls.mymusicplayer.listener.SongListItemClickListener;
 import com.example.yls.mymusicplayer.scan.ScanService;
 
 public class MainActivity extends AppCompatActivity implements InitListListener,ServiceConnection{
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements InitListListener,
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }else if(id == R.id.search_music_file){
+        }else if(id == R.id.search_music_file){ //扫描
             Intent scanIntent = new Intent(this,ScanService.class);
             scanIntent.setAction("com.example.yls.mymusicplayer.scan_music_file");
             bindService(scanIntent,this, Context.BIND_AUTO_CREATE);
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements InitListListener,
     @Override
     public void initSongList(Cursor cursor) {
         Log.i(ScanService.TAG, "activity:"+cursor);
-        songList.setAdapter(new SongCursorAdapter(this,R.layout.song_item,cursor));
+        songList.setAdapter(new SongCursorAdapter(this, R.layout.song_item, cursor));
+        songList.setOnItemClickListener(new SongListItemClickListener());
     }
 
     @Override

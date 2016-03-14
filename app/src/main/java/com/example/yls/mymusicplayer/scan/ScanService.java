@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.yls.mymusicplayer.MainActivity;
+import com.example.yls.mymusicplayer.Utils;
 
 import java.io.File;
 
@@ -47,6 +48,7 @@ public class ScanService extends IntentService {
      */
     // TODO: Customize helper method
     public static void startActionFoo(Context context, String param1, String param2) {
+        Log.i(Utils.TAG,"intentservice startActionFoo");
         Intent intent = new Intent(context, ScanService.class);
         intent.setAction(ACTION_SCAN_MUSIC_FILE);
         intent.putExtra(EXTRA_PARAM1, param1);
@@ -62,6 +64,7 @@ public class ScanService extends IntentService {
      */
     // TODO: Customize helper method
     public static void startActionBaz(Context context, String param1, String param2) {
+        Log.i(Utils.TAG,"intentservice startActionBaz");
         Intent intent = new Intent(context, ScanService.class);
         intent.setAction(ACTION_BAZ);
         intent.putExtra(EXTRA_PARAM1, param1);
@@ -76,6 +79,7 @@ public class ScanService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         this.intent = intent;
+        Log.i(Utils.TAG,"intentservice onHandleIntent");
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_SCAN_MUSIC_FILE.equals(action)) {
@@ -111,21 +115,22 @@ public class ScanService extends IntentService {
     }
 
     private void scanMediaInternalStorage(){
+        Log.i(Utils.TAG,"scanMediaInternalStorage");
         String [] projection = new String[]{
                 MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.DISPLAY_NAME,
                 MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.ARTIST,
-                MediaStore.Audio.Media.TITLE
+                MediaStore.Audio.Media.MIME_TYPE
         };
 
-        Cursor cursor = this.getContentResolver().query(INTERNAL_URI, projection,null,null,"");
-        Log.i(TAG,"scan cursor:"+cursor);
+        Cursor cursor = this.getContentResolver().query(INTERNAL_URI, projection,"mime_type like 'audio/%'",null,null);
+        Utils.printCursor(cursor, projection);
         activity.initSongList(cursor);
-
     }
 
     private void scanMusicFile(){
-        Log.i(TAG, "scanMusicFile begin...");
+        Log.i(Utils.TAG, "scanMusicFile begin...");
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
@@ -157,7 +162,6 @@ public class ScanService extends IntentService {
 
     @Override
     public IBinder onBind(Intent intent) {
-//        scanMediaInternalStorage();
         return new ScanServiceBinder();
     }
 
@@ -166,6 +170,7 @@ public class ScanService extends IntentService {
     public class ScanServiceBinder extends Binder{
         public void setActivity(MainActivity ma){
             activity = ma;
+            Log.i(Utils.TAG, "ScanServiceBinder setActivity");
             scanMediaInternalStorage();
         }
     }
