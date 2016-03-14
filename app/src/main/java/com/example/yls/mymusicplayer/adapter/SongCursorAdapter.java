@@ -44,7 +44,17 @@ public class SongCursorAdapter extends CursorAdapter{
     public void bindView(View view, Context context, Cursor cursor) {
         TextView name = (TextView) view.findViewById(R.id.tv_name);
         TextView duration = (TextView) view.findViewById(R.id.tv_duration);
+        view.setTag(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA)));
         name.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME)));
-        duration.setText(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION)));
+        duration.setText(getDurationFormat(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION))));
+    }
+
+    private String getDurationFormat(String cursorString) {
+        String ret = "";
+        int duration = Integer.parseInt(cursorString) / 1000;
+        int min = duration/60;
+        int second = duration%60;
+        ret = ((min < 10) ? "0" + min : "" + min) + ":" + ((second < 10) ? "0" + second : "" + second);
+        return ret;
     }
 }

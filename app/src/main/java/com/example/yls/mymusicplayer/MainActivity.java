@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements InitListListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         songList = (ListView) findViewById(R.id.song_list);
-//        startman
+
+        startScanService();
     }
 
     @Override
@@ -49,19 +50,23 @@ public class MainActivity extends AppCompatActivity implements InitListListener,
         if (id == R.id.action_settings) {
             return true;
         }else if(id == R.id.search_music_file){ //扫描
-            Intent scanIntent = new Intent(this,ScanService.class);
-            scanIntent.setAction("com.example.yls.mymusicplayer.scan_music_file");
-            bindService(scanIntent,this, Context.BIND_AUTO_CREATE);
+            startScanService();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startScanService(){
+        Intent scanIntent = new Intent(this,ScanService.class);
+        scanIntent.setAction("com.example.yls.mymusicplayer.scan_music_file");
+        bindService(scanIntent,this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     public void initSongList(Cursor cursor) {
         Log.i(ScanService.TAG, "activity:"+cursor);
         songList.setAdapter(new SongCursorAdapter(this, R.layout.song_item, cursor));
-        songList.setOnItemClickListener(new SongListItemClickListener());
+        songList.setOnItemClickListener(new SongListItemClickListener(this));
     }
 
     @Override
