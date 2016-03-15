@@ -15,16 +15,23 @@ public class MediaPlaybackService extends Service {
     }
 
 
-
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         return new MediaPlaybackServiceBinder();
     }
 
-    class MediaPlaybackServiceBinder extends Binder{
+    public class MediaPlaybackServiceBinder extends Binder{
         public void setPlaySourcePath(String playSourcePath){
             MediaPlaybackService.this.playSourcePath = playSourcePath;
         }
+
+        public void beginPlay(){
+            MediaPlaybackService.beginPlay();
+        }
+    }
+
+    public static void beginPlay(){
+
     }
 }
